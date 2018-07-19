@@ -1,4 +1,4 @@
-# == Class: logstash::params
+# == Class: logstash2x::params
 #
 # This class exists to
 # 1. Declutter the default value assignment for class parameters.
@@ -28,7 +28,7 @@
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elasticsearch.com>
 # * Matthias Baur <mailto:matthias.baur@dmc.de>
 #
-class logstash::params {
+class logstash2x::params {
 
   #### Default values for the parameters of the main module class, init.pp
 

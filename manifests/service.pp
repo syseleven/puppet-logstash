@@ -1,4 +1,4 @@
-# == Class: logstash::service
+# == Class: logstash2x::service
 #
 # This class exists to coordinate all service management related actions,
 # functionality and logical units in a central place.
@@ -16,7 +16,7 @@
 # === Examples
 #
 # This class may be imported by other classes to use its functionality:
-#   class { 'logstash::service': }
+#   class { 'logstash2x::service': }
 #
 # It is not intended to be used directly by external resources like node
 # definitions or other modules.
@@ -26,16 +26,16 @@
 #
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elasticsearch.com>
 #
-class logstash::service {
+class logstash2x::service {
 
-  case $logstash::service_provider {
+  case $logstash2x::service_provider {
 
     'init': {
-      logstash::service::init { $logstash::params::service_name: }
+      logstash2x::service::init { $logstash2x::params::service_name: }
     }
 
     default: {
-      fail("Unknown service provider ${logstash::service_provider}")
+      fail("Unknown service provider ${logstash2x::service_provider}")
     }
 
   }

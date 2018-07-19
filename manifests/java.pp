@@ -1,4 +1,4 @@
-# == Class: logstash::java
+# == Class: logstash2x::java
 #
 # This class exists to install java if its not managed from an other module
 #
@@ -11,7 +11,7 @@
 # === Examples
 #
 # This class may be imported by other classes to use its functionality:
-#   class { 'logstash::java': }
+#   class { 'logstash2x::java': }
 #
 # It is not intended to be used directly by external resources like node
 # definitions or other modules.
@@ -22,9 +22,9 @@
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elasticsearch.com>
 # * Matthias Baur <mailto:matthias.baur@dmc.de>
 #
-class logstash::java {
+class logstash2x::java {
 
-  if $logstash::java_package == undef {
+  if $logstash2x::java_package == undef {
     # Default Java package
     case $::operatingsystem {
       'CentOS', 'Fedora', 'Scientific', 'RedHat', 'Amazon', 'OracleLinux': {
@@ -52,7 +52,7 @@ class logstash::java {
       }
     }
   } else {
-    $package = $logstash::java_package
+    $package = $logstash2x::java_package
   }
 
   ## Install the java package unless already specified somewhere else

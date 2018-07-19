@@ -1,8 +1,8 @@
-# == Define: logstash::patternfile
+# == Define: logstash2x::patternfile
 #
 # This define allows you to transport custom pattern files to the Logstash instance
 #
-# All default values are defined in the logstashc::params class.
+# All default values are defined in the logstash2x::params class.
 #
 #
 # === Parameters
@@ -21,13 +21,13 @@
 #
 # === Examples
 #
-#     logstash::patternfile { 'mypattern':
+#     logstash2x::patternfile { 'mypattern':
 #       source => 'puppet:///path/to/my/custom/pattern'
 #     }
 #
 #     or wil an other actual file name
 #
-#     logstash::patternfile { 'mypattern':
+#     logstash2x::patternfile { 'mypattern':
 #       source   => 'puppet:///path/to/my/custom/pattern_v1',
 #       filename => 'custom_pattern'
 #     }
@@ -38,12 +38,12 @@
 # * Justin Lambert
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elasticsearch.com>
 #
-define logstash::patternfile (
+define logstash2x::patternfile (
   $source,
   $filename = undef,
 )
 {
-  require logstash::config
+  require logstash2x::config
 
   validate_re($source, '^(puppet|file)://', 'Source must be either from a puppet fileserver or a locally accessible file (begins with either puppet:// or file://)' )
 
@@ -52,11 +52,11 @@ define logstash::patternfile (
     default => $filename
   }
 
-  file { "${logstash::patterndir}/${filename_real}":
+  file { "${logstash2x::patterndir}/${filename_real}":
     ensure => file,
     source => $source,
-    owner  => $logstash::logstash_user,
-    group  => $logstash::logstash_group,
+    owner  => $logstash2x::logstash_user,
+    group  => $logstash2x::logstash_group,
     mode   => '0644',
     tag    => ['logstash_config'],
   }

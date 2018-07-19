@@ -1,4 +1,4 @@
-# == Class: logstash
+# == Class: logstash2x
 #
 # This class is able to install or remove logstash on a node.
 # It manages the status of the related service.
@@ -59,7 +59,7 @@
 #   Defaults to <tt>true</tt>, which will restart the application on any config
 #   change. Setting to <tt>false</tt> disables the automatic restart.
 #
-# The default values for the parameters are set in logstash::params. Have
+# The default values for the parameters are set in logstash2x::params. Have
 # a look at the corresponding <tt>params.pp</tt> manifest file if you need more
 # technical information about them.
 #
@@ -122,23 +122,23 @@
 # === Examples
 #
 # * Installation, make sure service is running and will be started at boot time:
-#     class { 'logstash':
+#     class { 'logstash2x':
 #       manage_repo => true,
 #     }
 #
 # * If you're not already managing Java some other way:
-#     class { 'logstash':
+#     class { 'logstash2x':
 #       manage_repo  => true,
 #       java_install => true,
 #     }
 #
 # * Removal/decommissioning:
-#     class { 'logstash':
+#     class { 'logstash2x':
 #       ensure => 'absent',
 #     }
 #
 # * Install everything but disable service(s) afterwards
-#     class { 'logstash':
+#     class { 'logstash2x':
 #       status => 'disabled',
 #     }
 #
@@ -147,21 +147,21 @@
 #
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elasticsearch.com>
 #
-class logstash(
-  $ensure              = $logstash::params::ensure,
-  $status              = $logstash::params::status,
-  $restart_on_change   = $logstash::params::restart_on_change,
-  $autoupgrade         = $logstash::params::autoupgrade,
+class logstash2x (
+  $ensure              = $logstash2x::params::ensure,
+  $status              = $logstash2x::params::status,
+  $restart_on_change   = $logstash2x::params::restart_on_change,
+  $autoupgrade         = $logstash2x::params::autoupgrade,
   $version             = false,
   $software_provider   = 'package',
   $package_url         = undef,
-  $package_dir         = $logstash::params::package_dir,
-  $purge_package_dir   = $logstash::params::purge_package_dir,
-  $package_dl_timeout  = $logstash::params::package_dl_timeout,
-  $logstash_user       = $logstash::params::logstash_user,
-  $logstash_group      = $logstash::params::logstash_group,
-  $configdir           = $logstash::params::configdir,
-  $purge_configdir     = $logstash::params::purge_configdir,
+  $package_dir         = $logstash2x::params::package_dir,
+  $purge_package_dir   = $logstash2x::params::purge_package_dir,
+  $package_dl_timeout  = $logstash2x::params::package_dl_timeout,
+  $logstash_user       = $logstash2x::params::logstash_user,
+  $logstash_group      = $logstash2x::params::logstash_group,
+  $configdir           = $logstash2x::params::configdir,
+  $purge_configdir     = $logstash2x::params::purge_configdir,
   $java_install        = false,
   $java_package        = undef,
   $service_provider    = 'init',
@@ -169,11 +169,11 @@ class logstash(
   $init_defaults_file  = undef,
   $init_template       = undef,
   $manage_repo         = false,
-  $repo_version        = $logstash::params::repo_version,
-) inherits logstash::params {
+  $repo_version        = $logstash2x::params::repo_version,
+) inherits logstash2x::params {
 
-  anchor {'logstash::begin': }
-  anchor {'logstash::end': }
+  anchor {'logstash2x::begin': }
+  anchor {'logstash2x::end': }
 
   #### Validate parameters
 
@@ -201,7 +201,7 @@ class logstash(
   # purge conf dir
   validate_bool($purge_configdir)
 
-  if ! ($service_provider in $logstash::params::service_providers) {
+  if ! ($service_provider in $logstash2x::params::service_providers) {
     fail("\"${service_provider}\" is not a valid provider for \"${::operatingsystem}\"")
   }
 
@@ -218,29 +218,29 @@ class logstash(
   #### Manage actions
 
   # package(s)
-  class { 'logstash::package': }
+  class { 'logstash2x::package': }
 
   # configuration
-  class { 'logstash::config': }
+  class { 'logstash2x::config': }
 
   # service(s)
-  class { 'logstash::service': }
+  class { 'logstash2x::service': }
 
   if $java_install == true {
     # Install java
-    class { 'logstash::java': }
+    class { 'logstash2x::java': }
 
     # ensure we first install java and then manage the service
-    Anchor['logstash::begin']
-    -> Class['logstash::java']
-    -> Class['logstash::package']
+    Anchor['logstash2x::begin']
+    -> Class['logstash2x::java']
+    -> Class['logstash2x::package']
   }
 
   if ($manage_repo == true) {
     # Set up repositories
-    # The order (repository before packages) is managed within logstash::repo
+    # The order (repository before packages) is managed within logstash2x::repo
     # We can't use the anchor or stage pattern here, since it breaks other modules also depending on the apt class
-    include logstash::repo
+    include logstash2x::repo
   }
 
   #### Manage relationships
@@ -248,23 +248,23 @@ class logstash(
   if $ensure == 'present' {
 
     # we need the software before configuring it
-    Anchor['logstash::begin']
-    -> Class['logstash::package']
-    -> Class['logstash::config']
+    Anchor['logstash2x::begin']
+    -> Class['logstash2x::package']
+    -> Class['logstash2x::config']
 
     # we need the software and a working configuration before running a service
-    Class['logstash::package'] -> Class['logstash::service']
-    Class['logstash::config']  -> Class['logstash::service']
+    Class['logstash2x::package'] -> Class['logstash2x::service']
+    Class['logstash2x::config']  -> Class['logstash2x::service']
 
-    Class['logstash::service'] -> Anchor['logstash::end']
+    Class['logstash2x::service'] -> Anchor['logstash2x::end']
 
   } else {
 
     # make sure all services are getting stopped before software removal
-    Anchor['logstash::begin']
-    -> Class['logstash::service']
-    -> Class['logstash::package']
-    -> Anchor['logstash::end']
+    Anchor['logstash2x::begin']
+    -> Class['logstash2x::service']
+    -> Class['logstash2x::package']
+    -> Anchor['logstash2x::end']
 
   }
 }
