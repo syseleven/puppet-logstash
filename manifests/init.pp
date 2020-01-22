@@ -148,28 +148,29 @@
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elasticsearch.com>
 #
 class logstash2x (
-  $ensure              = $logstash2x::params::ensure,
-  $status              = $logstash2x::params::status,
-  $restart_on_change   = $logstash2x::params::restart_on_change,
-  $autoupgrade         = $logstash2x::params::autoupgrade,
-  $version             = false,
-  $software_provider   = 'package',
-  $package_url         = undef,
-  $package_dir         = $logstash2x::params::package_dir,
-  $purge_package_dir   = $logstash2x::params::purge_package_dir,
-  $package_dl_timeout  = $logstash2x::params::package_dl_timeout,
-  $logstash_user       = $logstash2x::params::logstash_user,
-  $logstash_group      = $logstash2x::params::logstash_group,
-  $configdir           = $logstash2x::params::configdir,
-  $purge_configdir     = $logstash2x::params::purge_configdir,
-  $java_install        = false,
-  $java_package        = undef,
-  $service_provider    = 'init',
-  $init_defaults       = undef,
-  $init_defaults_file  = undef,
-  $init_template       = undef,
-  $manage_repo         = false,
-  $repo_version        = $logstash2x::params::repo_version,
+  Sys11lib::Ensure                                 $ensure              = $logstash2x::params::ensure,
+  Enum['enabled','disabled','running','unmanaged'] $status              = $logstash2x::params::status,
+  Boolean                                          $restart_on_change   = $logstash2x::params::restart_on_change,
+  Boolean                                          $autoupgrade         = $logstash2x::params::autoupgrade,
+  Integer                                          $package_dl_timeout  = $logstash2x::params::package_dl_timeout,
+  Boolean                                          $purge_configdir     = $logstash2x::params::purge_configdir,
+  String                                           $service_provider    = 'init',
+  Boolean                                          $manage_repo         = false,
+  String                                           $repo_version        = $logstash2x::params::repo_version,
+                                                   $init_defaults       = undef,
+                                                   $init_defaults_file  = undef,
+                                                   $init_template       = undef,
+                                                   $version             = false,
+                                                   $software_provider   = 'package',
+                                                   $package_url         = undef,
+                                                   $package_dir         = $logstash2x::params::package_dir,
+                                                   $purge_package_dir   = $logstash2x::params::purge_package_dir,
+                                                   $java_install        = false,
+                                                   $java_package        = undef,
+                                                   $logstash_user       = $logstash2x::params::logstash_user,
+                                                   $logstash_group      = $logstash2x::params::logstash_group,
+                                                   $configdir           = $logstash2x::params::configdir,
+
 ) inherits logstash2x::params {
 
   anchor {'logstash2x::begin': }
@@ -177,42 +178,9 @@ class logstash2x (
 
   #### Validate parameters
 
-  # ensure
-  if ! ($ensure in [ 'present', 'absent' ]) {
-    fail("\"${ensure}\" is not a valid ensure parameter value")
-  }
-
-  # autoupgrade
-  validate_bool($autoupgrade)
-
-  # package download timeout
-  if ! is_integer($package_dl_timeout) {
-    fail("\"${package_dl_timeout}\" is not a valid number for 'package_dl_timeout' parameter")
-  }
-
-  # service status
-  if ! ($status in [ 'enabled', 'disabled', 'running', 'unmanaged' ]) {
-    fail("\"${status}\" is not a valid status parameter value")
-  }
-
-  # restart on change
-  validate_bool($restart_on_change)
-
-  # purge conf dir
-  validate_bool($purge_configdir)
-
-  if ! ($service_provider in $logstash2x::params::service_providers) {
-    fail("\"${service_provider}\" is not a valid provider for \"${::operatingsystem}\"")
-  }
 
   if ($package_url != undef and $version != false) {
     fail('Unable to set the version number when using package_url option.')
-  }
-
-  validate_bool($manage_repo)
-
-  if ($manage_repo == true) {
-    validate_string($repo_version)
   }
 
   #### Manage actions

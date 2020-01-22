@@ -39,13 +39,11 @@
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elasticsearch.com>
 #
 define logstash2x::patternfile (
-  $source,
-  $filename = undef,
-)
-{
+  Pattern[/\A(puppet|file):\/\//] $source,
+                                  $filename = undef,
+) {
   require logstash2x::config
 
-  validate_re($source, '^(puppet|file)://', 'Source must be either from a puppet fileserver or a locally accessible file (begins with either puppet:// or file://)' )
 
   $filename_real = $filename ? {
     undef   => inline_template('<%= @source.split("/").last %>'),
